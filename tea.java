@@ -1,3 +1,5 @@
+import java.io.*;
+
 public class tea {
 
 	int delta = 0x9e3779b9; // (2^32 golden ratio, key scheduling constant)
@@ -12,13 +14,21 @@ public class tea {
 	*	 R += ((L<<4)+K[2]) XOR (L+sum) XOR ((L>>5)+K[3]) 
 	*
 	*/
-	public void encrypt(int L, int R) {
+	public void encrypt() {
 		
-		for (i=1;i<=32;i++) {
+		//split 32 bit entry 
+		L = p[0];
+		R = p[1];
+
+		for (int i=1;i<=32;i++) {
 			sum += delta;
-			L += (); 
-			R += ();
+			     /* L += ((R<<4)+K[0]) XOR (R+sum) XOR ((R>>5)+K[1]) */
+			L += ( ((R << 4)+(k[0])) ^ (R + sum) ^ ((R >> 5)+(k[1])) ); 
+
+			     /* R += ((L<<4)+K[2]) XOR (L+sum) XOR ((L>>5)+K[3]) */
+			R += ( ((L << 4)+(k[2])) ^ (L + sum) ^ ((L >> 5)+(k[3])) );
 		}
+		System.out.println("Ciphertext is "+L,R);
 	}	
 
 	public void decrypt() {
@@ -59,6 +69,12 @@ public class tea {
 
 	public static void main(String args[]) {
 		System.out.println("TEA ENCRYPTION: ");
+	    tea t = new tea();
+		System.out.println("Enter the key: ");
+		t.getKey();
+		System.out.println("Enter the number: ");
+		t.getPlainText();
+		t.encrypt();
 	}
 
 }
